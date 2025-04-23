@@ -13,7 +13,13 @@ const form = document.getElementById('media-form');
 const listEl = document.getElementById('liste-medias');
 const recherche = document.getElementById('recherche');
 const importInput = document.getElementById('import-file');
+const filtreTitre = document.getElementById('filtre-titre');
+const filtreAuteur = document.getElementById('filtre-auteur');
+const filtreAnnee = document.getElementById('filtre-annee');
+const btnReset = document.getElementById('btn-reset-filtre');
+// Define allMedias as an array of Media objects
 let allMedias = [];
+// let allMedias: Media[] = [];
 // Afficher une liste
 function render(list) {
     listEl.innerHTML = '';
@@ -40,6 +46,32 @@ recherche.addEventListener('input', () => {
     const q = recherche.value.toLowerCase();
     render(allMedias.filter(m => m.titre.toLowerCase().includes(q)));
 });
+// Fonction de filtrage
+function filtrerMedias() {
+    const titre = filtreTitre.value.toLowerCase();
+    const auteur = filtreAuteur.value.toLowerCase();
+    const annee = filtreAnnee.value;
+    const resultats = allMedias.filter(m => {
+        var _a;
+        const matchTitre = m.titre.toLowerCase().includes(titre);
+        const matchAuteur = ((_a = m.auteur) !== null && _a !== void 0 ? _a : '').toLowerCase().includes(auteur);
+        const matchAnnee = annee ? m.annee === Number(annee) : true;
+        return matchTitre && matchAuteur && matchAnnee;
+    });
+    render(resultats);
+}
+// Appliquer le filtre quand on tape
+filtreTitre.addEventListener('input', filtrerMedias);
+filtreAuteur.addEventListener('input', filtrerMedias);
+filtreAnnee.addEventListener('input', filtrerMedias);
+// Bouton de réinitialisation
+btnReset.addEventListener('click', () => {
+    filtreTitre.value = '';
+    filtreAuteur.value = '';
+    filtreAnnee.value = '';
+    render(allMedias);
+});
+// Removed duplicate render function implementation.
 // Soumission du formulaire
 form.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
     e.preventDefault();
