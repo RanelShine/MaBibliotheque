@@ -46,5 +46,17 @@
     "fileUrl": "blob:http://localhost:3000/23bf6ecd-b063-468b-83c7-8c90c2d94585",
     "mimeType": "video/mp4",
     "id": "17454191125195799"
+  },
+  {
+    "titre": "L__outil_plume_de_courbure,_un_outil_plume_facile_dans_Photoshop_[Formation_Photoshop](360p).mp4",
+    "auteur": "paulin",
+    "type": "musique",
+    "genre": "poetique",
+    "annee": 2023,
+    "note": 5,
+    "critique": "",
+    "fileUrl": "blob:http://localhost:3000/164e83a5-1960-415d-a779-2f38b9496d33",
+    "mimeType": "video/mp4",
+    "id": "17454303259438399"
   }
 ]
