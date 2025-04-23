@@ -14,3 +14,5 @@ export function generateId(): string {
   export function saveToStorage<T>(key: string, value: T): void {
     localStorage.setItem(key, JSON.stringify(value));
   }
+
+  
