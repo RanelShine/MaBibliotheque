@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES6",                       // ou ESNext
+      "module": "es2020",                       // ES Modules pour le navigateur
+      "moduleResolution": "Node",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "strict": true,
+      "esModuleInterop": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bibliothèque de Médias</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Ma Bibliothèque</h1>
+
+  <!-- Formulaire d'ajout -->
+  <form id="media-form">
+    <select name="type" id="type" required>
+      <option value="">-- Type de média --</option>
+      <option value="livre">Livre</option>
+      <option value="film">Film</option>
+      <option value="musique">Musique</option>
+    </select>
+    <input name="titre" type="text" id="titre" placeholder="Titre" required />
+    <input name="auteur" type="text" id="auteur" placeholder="Auteur / Réalisateur / Artiste" required />
+    <input name="annee" type="number" id="annee" placeholder="Année" required />
+    <input name="genre" type="text" id="genre" placeholder="Genre" required />
+    <input name="note" type="number" id="note" placeholder="Note sur 5" min="0" max="5" required />
+    <textarea name="critique" id="critique" placeholder="Critique (optionnelle)"></textarea>
+
+    <!-- Champ d'import de fichier -->
+    <label for="import-file">
+      Importer un fichier (.json, .txt, .pdf, images, audio, vidéo)
+    </label>
+    <input type="file"
+           id="import-file"
+           accept=".json,.txt,.pdf,image/*,audio/*,video/*"
+           multiple>
+
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <!-- Recherche -->
+  <input type="text" id="recherche" placeholder="Rechercher un média…" />
+
+  <h2>Liste des médias</h2>
+  <div id="liste-medias"></div>
+
+  <script type="module" src="./dist/app.js"></script>
+</body>
+</html>

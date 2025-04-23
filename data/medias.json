@@ -1,0 +1,38 @@
+[
+  {
+    "titre": "test fonctionnels.pdf",
+    "auteur": "fleuriste",
+    "type": "livre",
+    "genre": "mytique",
+    "annee": 2004,
+    "note": 5,
+    "critique": "",
+    "fileUrl": "blob:http://localhost:3000/68786995-e841-4140-b9d7-ac12b2c1ccfc",
+    "mimeType": "application/pdf",
+    "id": "17454115286532343"
+  },
+  {
+    "titre": "IKIII MAMA.mp4",
+    "auteur": "toto",
+    "type": "film",
+    "genre": "serie",
+    "annee": 2021,
+    "note": 5,
+    "critique": "",
+    "fileUrl": "blob:http://localhost:3000/e0d0f47c-7c17-4f6e-9101-c6d81f87b120",
+    "mimeType": "video/mp4",
+    "id": "17454143141038953"
+  },
+  {
+    "titre": "3D_Letter_Manipulation_-_Best_Photoshop_Tutorial_For_Beginner_2023(360p).mp4",
+    "auteur": "begin",
+    "type": "film",
+    "genre": "Educatif",
+    "annee": 2023,
+    "note": 5,
+    "critique": "",
+    "fileUrl": "blob:http://localhost:3000/9b7598d6-78e8-42e6-a210-c20b80ccd614",
+    "mimeType": "video/mp4",
+    "id": "17454143916469014"
+  }
+]
