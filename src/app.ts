@@ -20,14 +20,19 @@ let allMedias: Media[] = [];
 function render(list: Media[]) {
   listEl.innerHTML = '';
   list.forEach(m => {
-    const div = document.createElement('div');
-    div.className = 'media';
-    div.innerHTML = `
-      <strong>${m.titre}</strong>
-      <p>${m.type} — ${m.auteur || ''} (${m.annee||''})</p>
-      ${m.fileUrl ? `<a href="${m.fileUrl}" download>Télécharger</a>` : ''}
-    `;
-    listEl.append(div);
+    const tr = document.createElement("tr");
+    tr.className = 'media';
+    tr.innerHTML = `
+    <td>${m.type}</td>
+    <td>${m.titre}</td>
+    <td>${m.auteur}</td>
+    <td>${m.annee}</td>
+    <td>${m.genre}</td>
+    <td>${m.note}</td>
+    <td>${m.critique}</td>
+    <td>${m.fileUrl ? `<a href="${m.fileUrl}" download>Télécharger</a>` : ''}</td>
+  `;
+  listEl.append(tr);
   });
 }
 
