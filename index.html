@@ -24,12 +24,37 @@
         >
           Filtrer
         </button>
-        <button
-          id="btn-categories"
-          class="bg-white text-green-500 hover:bg-violet-500 hover:text-white px-4 py-2 rounded transition"
-        >
-          Catégories
-        </button>
+        <!-- placez ce bloc là où se trouve votre bouton "Catégories" -->
+<div class="relative inline-block text-left">
+  <button
+    id="btn-categories"
+    class="bg-white text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded transition"
+  >
+    Catégories
+  </button>
+
+  <!-- menu caché par défaut -->
+  <div
+    id="dropdown-categories"
+    class="hidden origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+  >
+    <div class="py-1 ">
+      <a href="#"
+         data-type="livre"
+         class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-500 hover:text-white"
+      >Livres</a>
+      <a href="#"
+         data-type="film"
+         class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-500 hover:text-white"
+      >Films</a>
+      <a href="#"
+         data-type="musique"
+         class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-500 hover:text-white"
+      >Musique</a>
+    </div>
+  </div>
+</div>
+
       </nav>
     </header>
 
@@ -99,11 +124,37 @@
           </table>
         </div>
       </div>
+      <section id="categories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+       <!-- onglets de catégories -->
+<div id="categories-container" class="flex justify-center space-x-4 my-6"></div>
+
+<!-- zone où l'on injecte la carte de médias filtrés -->
+<div id="grouped-medias" class="px-4"></div>
+
+      </section>
+      
     </main>
 
     <!-- Footer -->
     <footer class="bg-green-900 text-white text-center py-4">
       &copy; 2025 Ma Bibliothèque. Tous droits réservés.
     </footer>
+    
+    <!-- MODALE POUR AFFICHER LES MÉDIAS -->
+<div id="modal-overlay"
+class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+<div class="bg-white rounded-lg shadow-xl w-11/12 max-w-2xl mx-auto overflow-hidden">
+<!-- entête -->
+<div class="flex justify-between items-center bg-green-700 text-white px-4 py-2">
+ <h2 id="modal-title" class="text-lg font-semibold">Titre</h2>
+ <button id="modal-close" class="text-2xl leading-none">&times;</button>
+</div>
+<!-- corps -->
+<div id="modal-body" class="p-4 max-h-[70vh] overflow-y-auto">
+ <!-- Contenu injecté en TS -->
+</div>
+</div>
+</div>
+
   </body>
 </html>

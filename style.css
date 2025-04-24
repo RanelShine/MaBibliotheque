@@ -15,3 +15,30 @@ input, select, textarea, button {
   margin-top: 10px;
 }
 
+
+.category-item {
+  cursor: pointer;
+  @apply px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition;
+}
+
+.category-item.active {
+  @apply bg-green-700 text-white;
+}
+
+/* parent relative + dropdown absolute = positionnement */
+.relative { position: relative; }
+.absolute { position: absolute; }
+
+/* cache le menu */
+.hidden { display: none; }
+
+/* styles généraux */
+.bg-white { background-color: white; }
+.text-green-500 { color: #10B981; }
+.hover\:bg-green-500:hover { background-color: #10B981; }
+.hover\:text-white:hover { color: white; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.rounded { border-radius: 0.25rem; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05); }
+/* etc. */
