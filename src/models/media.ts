@@ -9,4 +9,5 @@ export interface Media {
   critique?: string;
   fileUrl?: string;       // URL Blob pour téléchargement
   mimeType?: string;
+  coverUrl?: string;
 }

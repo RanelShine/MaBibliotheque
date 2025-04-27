@@ -5,6 +5,10 @@ import fs from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { Media } from './models/media.js';
+import uploadRoute from './routes/upload.js';
+
+
+
 
 
 // Correction de __dirname
@@ -17,7 +21,9 @@ const dataPath = path.join(__dirname, '../data/medias.json');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/upload', uploadRoute);
+
 
 // Lire tous les médias
 app.get('/api/medias', async (_, res) => {

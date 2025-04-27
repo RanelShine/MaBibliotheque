@@ -1,11 +1,13 @@
 import { fetchMedias, addMedia, addMany } from './services/apiService.js';
 import { Media } from './models/media';
+import { deleteMedia } from './services/apiService.js';
 
 // DOM
 const form = document.getElementById('media-form') as HTMLFormElement;
 const listEl = document.getElementById('liste-medias')!;
 const recherche = document.getElementById('recherche') as HTMLInputElement;
 const importInput = document.getElementById('import-file') as HTMLInputElement;
+const coverInput = document.getElementById('cover-file') as HTMLInputElement;
 const filtreTitre = document.getElementById('filtre-titre') as HTMLInputElement;
 const filtreAuteur = document.getElementById('filtre-auteur') as HTMLInputElement;
 const filtreAnnee = document.getElementById('filtre-annee') as HTMLInputElement;
@@ -83,7 +85,7 @@ modalOverlay.addEventListener('click', e => {
 });
 
 /** Affichage */
-import { deleteMedia } from './services/apiService.js';
+
 // …
 
 function render(list: Media[]) {
@@ -91,42 +93,75 @@ function render(list: Media[]) {
 
   list.forEach(m => {
     const card = document.createElement('div');
-    card.className = 'shadow-sm border rounded-lg p-4 bg-white flex flex-col justify-between hover:shadow-lg transition-shadow';
+    card.className =
+      'shadow-sm border rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow';
 
     card.innerHTML = `
-      <div>
-        <h3 class="text-xl font-bold text-green-700 mb-2">${m.titre}</h3>
-        <p class="text-sm text-gray-700"><strong>Type :</strong> ${m.type}</p>
-        <p class="text-sm text-gray-700"><strong>Auteur :</strong> ${m.auteur}</p>
-        <p class="text-sm text-gray-700"><strong>Année :</strong> ${m.annee}</p>
-        <p class="text-sm text-gray-700"><strong>Genre :</strong> ${m.genre}</p>
-        <p class="text-sm text-gray-700"><strong>Note :</strong> ${m.note} / 5</p>
-        ${m.critique ? `<p class="mt-2 italic text-gray-600">“${m.critique}”</p>` : ''}
+      <!-- Affichage de la couverture si présente -->
+      ${m.coverUrl
+        ? `<img
+             src="${m.coverUrl}"
+             alt="Couverture de ${m.titre}"
+             class="w-full h-32 object-cover"`
+        + ` rounded-t-lg mb-2`
+        + ` />`
+        : ''
+      }
+
+      <div class="p-4 flex flex-col justify-between h-full">
+        <div>
+          <h3 class="text-xl font-bold text-green-700 mb-2">${m.titre}</h3>
+          <p class="text-sm text-gray-700"><strong>Type :</strong> ${m.type}</p>
+          <p class="text-sm text-gray-700"><strong>Auteur :</strong> ${m.auteur}</p>
+          <p class="text-sm text-gray-700"><strong>Année :</strong> ${m.annee}</p>
+          <p class="text-sm text-gray-700"><strong>Genre :</strong> ${m.genre}</p>
+          <p class="text-sm text-gray-700"><strong>Note :</strong> ${m.note} / 5</p>
+          ${m.critique ? `<p class="mt-2 italic text-gray-600">“${m.critique}”</p>` : ''}
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+          ${m.fileUrl
+            ? `<a href="${m.fileUrl}" download
+                  class="text-blue-600 underline hover:text-green-800">
+                 Télécharger
+               </a>`
+            : ''
+          }
+          <button data-id="${m.id}"
+                  class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+            Supprimer
+          </button>
+        </div>
       </div>
-      <div class="mt-4 flex justify-between items-center">
-        ${m.fileUrl ? `
-          <a href="${m.fileUrl}" download class="text-blue-600 underline hover:text-green-800">
-            Télécharger
-          </a>` : ''}
-        <button data-id="${m.id}"
-                class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-          Supprimer
-        </button>
-      </div>
-    `;
+    `.trim();
+
     listEl.appendChild(card);
   });
 
-  // Après avoir injecté toutes les cartes, ajoute les listeners
   document.querySelectorAll('.delete-btn').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
+    btn.addEventListener('click', async e => {
       const id = (e.currentTarget as HTMLElement).dataset.id!;
       await deleteMedia(id);
-      // Retirer en front ou recharger la liste
       allMedias = allMedias.filter(m => m.id !== id);
       render(allMedias);
     });
   });
+}
+
+async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('cover', file);
+
+  const response = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error('Erreur pendant l’upload de l’image');
+  }
+
+  const data = await response.json();
+  return data.fileUrl; // => '/uploads/nomdufichier.jpg'
 }
 
 
@@ -170,8 +205,8 @@ btnReset.addEventListener('click', () => {
 form.addEventListener('submit', async e => {
   e.preventDefault();
 
-  // 1) Récupération des valeurs du formulaire
   const formData = new FormData(form);
+
   const base = {
     titre:    formData.get('titre')    as string,
     auteur:   formData.get('auteur')   as string,
@@ -182,33 +217,47 @@ form.addEventListener('submit', async e => {
     critique: formData.get('critique') as string
   };
 
-  // 2) Préparation du ou des médias à envoyer
-  const files = importInput.files;
-  if (files && files.length) {
-    
-    const toBulk: Omit<Media,'id'>[] = [];
-    Array.from(files).forEach(file => {
-      const url  = URL.createObjectURL(file);
+  let coverUrl: string | undefined = undefined;
+  
+  // Gestion de la cover
+  if (coverInput.files && coverInput.files.length > 0) {
+    const coverFile = coverInput.files[0];
+    coverUrl = await uploadImage(coverFile);
+  }
+
+  // Gestion du/ des fichiers médias
+  if (importInput.files && importInput.files.length > 0) {
+    const toBulk: Omit<Media, 'id'>[] = [];
+
+    Array.from(importInput.files).forEach(file => {
+      const url = URL.createObjectURL(file); // ou utiliser upload ici si besoin
       const mime = file.type;
-     
+
       toBulk.push({
         ...base,
-        fileUrl:  url,
+        coverUrl,
+        fileUrl: url,
         mimeType: mime
       });
     });
-    await addMany(toBulk);  
+
+    await addMany(toBulk);
   } else {
-    
-    await addMedia(base);
+    await addMedia({ ...base, coverUrl });
   }
 
-
-  form.reset();            
-  importInput.value = '';  
-  await loadAndRender();   
+  form.reset();
+  importInput.value = '';
+  coverInput.value = '';
+  await loadAndRender();
 });
+
+
 
 
 // ─── Initialisation ─────────────────────────────────────────────
 loadAndRender();
+// function uploadImage(arg0: File): string | PromiseLike<string | undefined> | undefined {
+//   throw new Error('Function not implemented.');
+// }
+

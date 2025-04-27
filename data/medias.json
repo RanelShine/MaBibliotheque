@@ -1,41 +1,5 @@
 [
   {
-    "titre": " Le petit prince",
-    "auteur": "Antoine de saint-exupery",
-    "type": "film",
-    "genre": "Comptes Philosophiques",
-    "annee": 1943,
-    "note": 5,
-    "critique": "un classique intemporel",
-    "fileUrl": "blob:http://localhost:3000/b55a2a59-d264-497f-b329-d7e3410f1380",
-    "mimeType": "image/jpeg",
-    "id": "17454836181577068"
-  },
-  {
-    "titre": "always be a braidmaid",
-    "auteur": "javicia leslie",
-    "type": "musique",
-    "genre": "romance",
-    "annee": 2023,
-    "note": 3,
-    "critique": "film de ouf",
-    "fileUrl": "blob:http://localhost:3000/0da8a213-1353-441f-9a38-b37741d7b379",
-    "mimeType": "video/mp4",
-    "id": "17454851090417806"
-  },
-  {
-    "titre": "the 100",
-    "auteur": "negro",
-    "type": "film",
-    "genre": "action",
-    "annee": 2015,
-    "note": 5,
-    "critique": "pas de critique",
-    "fileUrl": "blob:http://localhost:3000/d68be62f-ac59-4a8d-9627-754425bee671",
-    "mimeType": "image/png",
-    "id": "17455191500510022"
-  },
-  {
     "titre": "Javascript de A à Z",
     "auteur": "GOUDJOU BLONDON",
     "type": "livre",
@@ -48,15 +12,55 @@
     "id": "17456619173770947"
   },
   {
-    "titre": "lala",
-    "auteur": "eux",
+    "titre": "yeye",
+    "auteur": "amore",
     "type": "livre",
-    "genre": "SERIE",
-    "annee": 1990,
-    "note": 5,
+    "genre": "SEVIQUE",
+    "annee": 2015,
+    "note": 4,
     "critique": "",
-    "fileUrl": "blob:http://localhost:3000/31c0568b-e10e-4d7f-9492-911567677d09",
-    "mimeType": "image/jpeg",
-    "id": "17457658568770933"
+    "coverUrl": "/uploads/1745768899670-BLOC_ALIMENTATION.png",
+    "fileUrl": "blob:http://localhost:3000/e277bc41-b985-4b5a-aea6-a532fe393953",
+    "mimeType": "video/mp4",
+    "id": "17457688997014882"
+  },
+  {
+    "titre": "lala",
+    "auteur": "DE",
+    "type": "livre",
+    "genre": "DZ",
+    "annee": 2005,
+    "note": 2,
+    "critique": "",
+    "coverUrl": "/uploads/1745769803203-gmail.png",
+    "fileUrl": "blob:http://localhost:3000/2529a8aa-1dd0-4515-9517-46a483cf82cb",
+    "mimeType": "video/mp4",
+    "id": "17457698032658782"
+  },
+  {
+    "titre": "jaja",
+    "auteur": "baba",
+    "type": "film",
+    "genre": "VGHJKL",
+    "annee": 1981,
+    "note": 4,
+    "critique": "",
+    "coverUrl": "/uploads/1745770708499-IMG_7519.JPG",
+    "fileUrl": "blob:http://localhost:3000/37bbddbb-5c00-4e4c-961b-eae05f9ad7bd",
+    "mimeType": "video/mp4",
+    "id": "17457707085064532"
+  },
+  {
+    "titre": "LKJ",
+    "auteur": "SA",
+    "type": "livre",
+    "genre": "XDA",
+    "annee": 890,
+    "note": 1,
+    "critique": "ADDA",
+    "coverUrl": "/uploads/1745770903273-IMG-20241122-WA0345.jpg",
+    "fileUrl": "blob:http://localhost:3000/04862f2d-be6f-4513-9135-05e0ef10b3d6",
+    "mimeType": "video/mp4",
+    "id": "17457709033161129"
   }
 ]

@@ -8,11 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { fetchMedias, addMedia, addMany } from './services/apiService.js';
+import { deleteMedia } from './services/apiService.js';
 // DOM
 const form = document.getElementById('media-form');
 const listEl = document.getElementById('liste-medias');
 const recherche = document.getElementById('recherche');
 const importInput = document.getElementById('import-file');
+const coverInput = document.getElementById('cover-file');
 const filtreTitre = document.getElementById('filtre-titre');
 const filtreAuteur = document.getElementById('filtre-auteur');
 const filtreAnnee = document.getElementById('filtre-annee');
@@ -80,45 +82,72 @@ modalOverlay.addEventListener('click', e => {
     }
 });
 /** Affichage */
-import { deleteMedia } from './services/apiService.js';
 // …
 function render(list) {
     listEl.innerHTML = '';
     list.forEach(m => {
         const card = document.createElement('div');
-        card.className = 'shadow-sm border rounded-lg p-4 bg-white flex flex-col justify-between hover:shadow-lg transition-shadow';
+        card.className =
+            'shadow-sm border rounded-lg bg-white overflow-hidden hover:shadow-lg transition-shadow';
         card.innerHTML = `
-      <div>
-        <h3 class="text-xl font-bold text-green-700 mb-2">${m.titre}</h3>
-        <p class="text-sm text-gray-700"><strong>Type :</strong> ${m.type}</p>
-        <p class="text-sm text-gray-700"><strong>Auteur :</strong> ${m.auteur}</p>
-        <p class="text-sm text-gray-700"><strong>Année :</strong> ${m.annee}</p>
-        <p class="text-sm text-gray-700"><strong>Genre :</strong> ${m.genre}</p>
-        <p class="text-sm text-gray-700"><strong>Note :</strong> ${m.note} / 5</p>
-        ${m.critique ? `<p class="mt-2 italic text-gray-600">“${m.critique}”</p>` : ''}
+      <!-- Affichage de la couverture si présente -->
+      ${m.coverUrl
+            ? `<img
+             src="${m.coverUrl}"
+             alt="Couverture de ${m.titre}"
+             class="w-full h-32 object-cover"`
+                + ` rounded-t-lg mb-2`
+                + ` />`
+            : ''}
+
+      <div class="p-4 flex flex-col justify-between h-full">
+        <div>
+          <h3 class="text-xl font-bold text-green-700 mb-2">${m.titre}</h3>
+          <p class="text-sm text-gray-700"><strong>Type :</strong> ${m.type}</p>
+          <p class="text-sm text-gray-700"><strong>Auteur :</strong> ${m.auteur}</p>
+          <p class="text-sm text-gray-700"><strong>Année :</strong> ${m.annee}</p>
+          <p class="text-sm text-gray-700"><strong>Genre :</strong> ${m.genre}</p>
+          <p class="text-sm text-gray-700"><strong>Note :</strong> ${m.note} / 5</p>
+          ${m.critique ? `<p class="mt-2 italic text-gray-600">“${m.critique}”</p>` : ''}
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+          ${m.fileUrl
+            ? `<a href="${m.fileUrl}" download
+                  class="text-blue-600 underline hover:text-green-800">
+                 Télécharger
+               </a>`
+            : ''}
+          <button data-id="${m.id}"
+                  class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+            Supprimer
+          </button>
+        </div>
       </div>
-      <div class="mt-4 flex justify-between items-center">
-        ${m.fileUrl ? `
-          <a href="${m.fileUrl}" download class="text-blue-600 underline hover:text-green-800">
-            Télécharger
-          </a>` : ''}
-        <button data-id="${m.id}"
-                class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-          Supprimer
-        </button>
-      </div>
-    `;
+    `.trim();
         listEl.appendChild(card);
     });
-    // Après avoir injecté toutes les cartes, ajoute les listeners
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => __awaiter(this, void 0, void 0, function* () {
             const id = e.currentTarget.dataset.id;
             yield deleteMedia(id);
-            // Retirer en front ou recharger la liste
             allMedias = allMedias.filter(m => m.id !== id);
             render(allMedias);
         }));
+    });
+}
+function uploadImage(file) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const formData = new FormData();
+        formData.append('cover', file);
+        const response = yield fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) {
+            throw new Error('Erreur pendant l’upload de l’image');
+        }
+        const data = yield response.json();
+        return data.fileUrl; // => '/uploads/nomdufichier.jpg'
     });
 }
 // ─── Chargement initial des médias ───────────────────────────────
@@ -159,7 +188,6 @@ btnReset.addEventListener('click', () => {
 // ─── Soumission du formulaire ─────────────────────────────────────
 form.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, function* () {
     e.preventDefault();
-    // 1) Récupération des valeurs du formulaire
     const formData = new FormData(form);
     const base = {
         titre: formData.get('titre'),
@@ -170,23 +198,32 @@ form.addEventListener('submit', (e) => __awaiter(void 0, void 0, void 0, functio
         note: Number(formData.get('note')),
         critique: formData.get('critique')
     };
-    // 2) Préparation du ou des médias à envoyer
-    const files = importInput.files;
-    if (files && files.length) {
+    let coverUrl = undefined;
+    // Gestion de la cover
+    if (coverInput.files && coverInput.files.length > 0) {
+        const coverFile = coverInput.files[0];
+        coverUrl = yield uploadImage(coverFile);
+    }
+    // Gestion du/ des fichiers médias
+    if (importInput.files && importInput.files.length > 0) {
         const toBulk = [];
-        Array.from(files).forEach(file => {
-            const url = URL.createObjectURL(file);
+        Array.from(importInput.files).forEach(file => {
+            const url = URL.createObjectURL(file); // ou utiliser upload ici si besoin
             const mime = file.type;
-            toBulk.push(Object.assign(Object.assign({}, base), { fileUrl: url, mimeType: mime }));
+            toBulk.push(Object.assign(Object.assign({}, base), { coverUrl, fileUrl: url, mimeType: mime }));
         });
         yield addMany(toBulk);
     }
     else {
-        yield addMedia(base);
+        yield addMedia(Object.assign(Object.assign({}, base), { coverUrl }));
     }
     form.reset();
     importInput.value = '';
+    coverInput.value = '';
     yield loadAndRender();
 }));
 // ─── Initialisation ─────────────────────────────────────────────
 loadAndRender();
+// function uploadImage(arg0: File): string | PromiseLike<string | undefined> | undefined {
+//   throw new Error('Function not implemented.');
+// }

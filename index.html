@@ -61,30 +61,59 @@
     <!-- Contenu principal -->
     <main id="main-content" class="flex-1 p-6 space-y-6">
       <!-- Formulaire d'ajout -->
-      <form id="media-form" class="space-y-4 bg-white p-6 rounded shadow-md">
-        <h1 class="font-bold text-2xl border-2 border-black rounded p-2 text-center w-fit mx-auto">
-          ****Ajouter un média****
-        </h1>        
+      <form id="media-form" class="space-y-4 bg-white p-6 rounded shadow-md" enctype="multipart/form-data">
+        <h1 class="font-bold text-2xl text-center">Ajouter un média</h1>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <select name="type" id="type" required class="border p-2 rounded border-green-400 border-1">
+          <!-- Métadonnées -->
+          <select name="type" id="type" required class="border p-2 rounded border-green-400">
             <option value="">Type de média</option>
             <option value="livre">Livre</option>
             <option value="film">Film</option>
             <option value="musique">Musique</option>
           </select>
-          <input name="titre" type="text" id="titre" placeholder="Titre" required class="border p-2 rounded border-green-400 border-1" />
-          <input name="auteur" type="text" id="auteur" placeholder="Auteur / Réalisateur / Artiste" required class="border p-2 rounded border-green-400 border-1" />
-          <input name="annee" type="number" id="annee" placeholder="Année" required class="border p-2 rounded border-green-400 border-1" />
-          <input name="genre" type="text" id="genre" placeholder="Genre" required class="border p-2 rounded border-green-400 border-1" />
-          <input name="note" type="number" id="note" placeholder="Note sur 5" min="0" max="5" required class="border p-2 rounded border-green-400 border-1" />
+          <input name="titre" type="text" id="titre" placeholder="Titre" required class="border p-2 rounded border-green-400" />
+          <input name="auteur" type="text" id="auteur" placeholder="Auteur / Réalisateur / Artiste" required class="border p-2 rounded border-green-400" />
+          <input name="annee" type="number" id="annee" placeholder="Année" required class="border p-2 rounded border-green-400" />
+          <input name="genre" type="text" id="genre" placeholder="Genre" required class="border p-2 rounded border-green-400" />
+          <input name="note" type="number" id="note" placeholder="Note sur 5" min="0" max="5" required class="border p-2 rounded border-green-400" />
         </div>
-        <textarea name="critique" id="critique" placeholder="Critique (optionnelle)" class="border p-2 w-full rounded border-green-400 border-1"></textarea>
-        <div class="flex">
-          <label for="import-file" class="block mb-2">Importer un fichier</label>
-          <input type="file" id="import-file" accept=".json,.txt,.pdf,image/*,audio/*,video/*" multiple class="block w-full" />
+      
+        <textarea name="critique" id="critique" placeholder="Critique (optionnelle)" class="border p-2 w-full rounded border-green-400"></textarea>
+      
+        <!-- 1) Couverture d'image -->
+        <div class="flex flex-col">
+          <label for="cover-file" class="block mb-2 font-medium">
+            Image de couverture (optionnel)
+          </label>
+          <input
+            type="file"
+            id="cover-file"
+            name="cover"
+            accept="image/*"
+            class="block w-full border p-2 rounded border-green-400"
+          />
         </div>
-        <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700">Ajouter</button>
+      
+        <!-- 2) Import de médias -->
+        <div class="flex flex-col">
+          <label for="import-file" class="block mb-2 font-medium">
+            Importer un fichier média (.json, .txt, .pdf, audio, vidéo)
+          </label>
+          <input
+            type="file"
+            id="import-file"
+            name="media"
+            accept=".json,.txt,.pdf,audio/*,video/*"
+            multiple
+            class="block w-full border p-2 rounded border-green-400"
+          />
+        </div>
+      
+        <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-700">
+          Ajouter
+        </button>
       </form>
+      
 
       <!-- Barre de recherche -->
       <div class="space-y-4 bg-white p-6 rounded shadow-md" id="filtre">
