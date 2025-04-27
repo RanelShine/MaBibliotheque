@@ -79,23 +79,46 @@ modalOverlay.addEventListener('click', e => {
         modalOverlay.classList.add('hidden');
     }
 });
-/** Affichage dans le tableau (vue brute) */
+/** Affichage */
+import { deleteMedia } from './services/apiService.js';
+// …
 function render(list) {
     listEl.innerHTML = '';
     list.forEach(m => {
-        const tr = document.createElement('tr');
-        tr.className = 'media';
-        tr.innerHTML = `
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.type}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.titre}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.auteur}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.annee}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.genre}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.note}</td>
-      <td class="px-4 py-2 whitespace-normal break-words max-w-xs">${m.critique}</td>
-      <a href="${m.fileUrl}" download class="text-blue-600 underline px-4 py-2 hover:text-green-800">Télécharger</a>
+        const card = document.createElement('div');
+        card.className = 'shadow-sm border rounded-lg p-4 bg-white flex flex-col justify-between hover:shadow-lg transition-shadow';
+        card.innerHTML = `
+      <div>
+        <h3 class="text-xl font-bold text-green-700 mb-2">${m.titre}</h3>
+        <p class="text-sm text-gray-700"><strong>Type :</strong> ${m.type}</p>
+        <p class="text-sm text-gray-700"><strong>Auteur :</strong> ${m.auteur}</p>
+        <p class="text-sm text-gray-700"><strong>Année :</strong> ${m.annee}</p>
+        <p class="text-sm text-gray-700"><strong>Genre :</strong> ${m.genre}</p>
+        <p class="text-sm text-gray-700"><strong>Note :</strong> ${m.note} / 5</p>
+        ${m.critique ? `<p class="mt-2 italic text-gray-600">“${m.critique}”</p>` : ''}
+      </div>
+      <div class="mt-4 flex justify-between items-center">
+        ${m.fileUrl ? `
+          <a href="${m.fileUrl}" download class="text-blue-600 underline hover:text-green-800">
+            Télécharger
+          </a>` : ''}
+        <button data-id="${m.id}"
+                class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+          Supprimer
+        </button>
+      </div>
     `;
-        listEl.append(tr);
+        listEl.appendChild(card);
+    });
+    // Après avoir injecté toutes les cartes, ajoute les listeners
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => __awaiter(this, void 0, void 0, function* () {
+            const id = e.currentTarget.dataset.id;
+            yield deleteMedia(id);
+            // Retirer en front ou recharger la liste
+            allMedias = allMedias.filter(m => m.id !== id);
+            render(allMedias);
+        }));
     });
 }
 // ─── Chargement initial des médias ───────────────────────────────

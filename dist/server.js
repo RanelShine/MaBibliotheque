@@ -49,6 +49,38 @@ app.post('/api/medias', (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).json({ error: 'Impossible d’ajouter le média.' });
     }
 }));
+// Supprimer un média par son id
+app.delete('/api/medias/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const txt = yield fs.readFile(dataPath, 'utf-8');
+        let list = JSON.parse(txt);
+        list = list.filter(m => m.id !== id);
+        yield fs.writeFile(dataPath, JSON.stringify(list, null, 2));
+        res.status(200).json({ success: true });
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Impossible de supprimer le média.' });
+    }
+}));
+// Mettre à jour un média par son id
+app.put('/api/medias/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const updated = req.body;
+        const txt = yield fs.readFile(dataPath, 'utf-8');
+        const list = JSON.parse(txt);
+        const idx = list.findIndex(m => m.id === id);
+        if (idx === -1)
+            return res.status(404).json({ error: 'Média non trouvé' });
+        list[idx] = Object.assign(Object.assign({}, updated), { id });
+        yield fs.writeFile(dataPath, JSON.stringify(list, null, 2));
+        res.json(list[idx]);
+    }
+    catch (err) {
+        res.status(500).json({ error: 'Impossible de modifier le média.' });
+    }
+}));
 // Ajouter PLUSIEURS médias
 app.post('/api/medias/bulk', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

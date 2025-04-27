@@ -46,6 +46,39 @@ app.post('/api/medias', async (req, res) => {
   }
 });
 
+// Supprimer un média par son id
+app.delete('/api/medias/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const txt = await fs.readFile(dataPath, 'utf-8');
+    let list: Media[] = JSON.parse(txt);
+    list = list.filter(m => m.id !== id);
+    await fs.writeFile(dataPath, JSON.stringify(list, null, 2));
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Impossible de supprimer le média.' });
+  }
+});
+
+// Mettre à jour un média par son id
+app.put('/api/medias/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updated: Omit<Media,'id'> = req.body;
+    const txt = await fs.readFile(dataPath, 'utf-8');
+    const list: Media[] = JSON.parse(txt);
+    const idx = list.findIndex(m => m.id === id);
+    if (idx === -1) return res.status(404).json({ error: 'Média non trouvé' });
+
+    list[idx] = { ...updated, id };
+    await fs.writeFile(dataPath, JSON.stringify(list, null, 2));
+    res.json(list[idx]);
+  } catch (err) {
+    res.status(500).json({ error: 'Impossible de modifier le média.' });
+  }
+});
+
+
 // Ajouter PLUSIEURS médias
 app.post('/api/medias/bulk', async (req, res) => {
   try {

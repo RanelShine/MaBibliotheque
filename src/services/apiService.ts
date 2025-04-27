@@ -24,3 +24,8 @@ export async function addMany(items: Omit<Media,'id'>[]): Promise<Media[]> {
   });
   return r.json();
 }
+
+
+export async function deleteMedia(id: string): Promise<void> {
+  await fetch(`/api/medias/${id}`, { method: 'DELETE' });
+}

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Bibliothèque de Médias</title>
     <script type="module" src="./dist/app.js"></script>
-    <!-- Tailwind CDN (à remplacer par build local si nécessaire) -->
+   
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -24,7 +24,7 @@
         >
           Filtrer
         </button>
-        <!-- placez ce bloc là où se trouve votre bouton "Catégories" -->
+        
 <div class="relative inline-block text-left">
   <button
     id="btn-categories"
@@ -104,31 +104,16 @@
       <!-- Liste des médias -->
       <div id="ancre" class="space-y-4 bg-white p-6 rounded shadow-md">
         <h2 class="mb-4 font-bold text-2xl border-2 border-black rounded p-2 text-center w-fit mx-auto">****Liste des médias****</h2>
-        <div class="overflow-x-auto rounded shadow-md">
-          <table class="min-w-full table-auto text-left border border-gray-200 ">
-            <thead class="bg-green-400 text-black">
-              <tr>
-                <th class="px-4 py-2">Type</th>
-                <th class="px-4 py-2">Titre</th>
-                <th class="px-4 py-2">Auteur</th>
-                <th class="px-4 py-2">Année</th>
-                <th class="px-4 py-2">Genre</th>
-                <th class="px-4 py-2">Note</th>
-                <th class="px-4 py-2">Critique</th>
-                <th class="px-4 py-2">Action</th>
-              </tr>
-            </thead>
-            <tbody id="liste-medias" class="bg-white divide-y divide-gray-200">
-              <!-- Les lignes du tableau seront injectées ici en JS -->
-            </tbody>
-          </table>
-        </div>
+        <!-- Conteneur cartes -->
+<div id="liste-medias" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+  <!-- Les cartes -->
+</div>
+
       </div>
       <section id="categories" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
        <!-- onglets de catégories -->
 <div id="categories-container" class="flex justify-center space-x-4 my-6"></div>
 
-<!-- zone où l'on injecte la carte de médias filtrés -->
 <div id="grouped-medias" class="px-4"></div>
 
       </section>

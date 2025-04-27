@@ -34,3 +34,8 @@ export function addMany(items) {
         return r.json();
     });
 }
+export function deleteMedia(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield fetch(`/api/medias/${id}`, { method: 'DELETE' });
+    });
+}
